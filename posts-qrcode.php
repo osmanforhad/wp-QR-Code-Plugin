@@ -118,7 +118,7 @@ function pqrc_settings_init()
 	//hook for add plugin Settings Section
 	add_settings_section(
 		'pqrc_section',
-		__('Posts QR Code Section', 'posts-qrcode'),
+		__('Posts QR Code Section from Posts QR Code Plugin', 'posts-qrcode'),
 		'pqrc_section_callback',
 		'reading');
 
