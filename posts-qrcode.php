@@ -149,15 +149,15 @@ function pqrc_settings_init()
         'reading',
         'pqrc_section'
     );
-    
-     // add_settings_field(
-    //     'pqrc_extra',
-    //     __('Extra Field', 'posts-qrcode'),
-    //     'pqrc_display_field',
-    //     'reading',
-    //     'pqrc_section',
-    //     array('pqrc_extra')
-    // );
+
+    add_settings_field(
+        'pqrc_checkbox',
+        __('Select CheckBox', 'posts-qrcode'),
+        'pqrc_display_checkbox_field',
+        'reading',
+        'pqrc_section'
+    );
+
 
     //Register Custom Field for QR code plugin
     register_setting(
@@ -178,20 +178,19 @@ function pqrc_settings_init()
         array('sanitize_callback' => 'esc_attr')
     );
 
-    // register_setting(
-    //     'reading',
-    //     'pqrc_extra',
-    //     array('sanitize_callback' => 'esc_attr')
-    // );
+    register_setting(
+        'reading',
+        'pqrc_checkbox'
+    );
 }
 
-//__Callback funcition for Display Settings Section
+//__Callback function for Display Settings Section__//
 function pqrc_section_callback()
 {
     echo "<p>" . __('Settings for Posts QR Code Plugin', 'posts-qrcode') . "</p>";
 }
 
-//__Display Settings Fields__//
+//__Callback function for Display input box Settings Fields__//
 function pqrc_display_field($args)
 {
     $options = get_option($args[0]);
@@ -203,7 +202,7 @@ function pqrc_display_field($args)
     );
 }
 
-//__Display Dropdown field in Settings are__//
+//__Callback function for Display Dropdown field in Settings area__//
 function pqrc_display_select_field()
 {
     $option = get_option('pqrc_select');
@@ -224,7 +223,9 @@ function pqrc_display_select_field()
     );
     foreach ($Districts as $District) {
         $selected = '';
-        if ($option == $District) $selected = 'selected';
+        if ($option == $District) {
+            $selected = 'selected';
+        }
         printf(
             '<option value="%s" %s>%s</option>',
             $District,
@@ -233,6 +234,35 @@ function pqrc_display_select_field()
         );
     }
     echo '</select>';
+}
+
+//___Callback function for Display Checkbox Field__//
+function pqrc_display_checkbox_field()
+{
+    $option = get_option('pqrc_checkbox');
+    $Districts = array(
+        'Dhaka',
+        'Chittagong',
+        'Khulna',
+        'Dinajpur',
+        'Feni',
+        'Jessor',
+        'Rajsahi'
+    );
+
+    foreach ($Districts as $District) {
+        $selected = '';
+        if (is_array($option) && in_array($District, $option)) {
+            $selected = 'checked';
+        }
+
+        printf(
+            '<input type="checkbox" name="pqrc_checkbox[]" value="%s" %s />%s <br/>',
+            $District,
+            $selected,
+            $District
+        );
+    }
 }
 
 //Action hook for plugin settings
