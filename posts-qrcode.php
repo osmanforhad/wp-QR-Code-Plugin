@@ -127,19 +127,29 @@ function pqrc_settings_init()
     add_settings_field(
         'pqrc_height',
         __('QR Code Height', 'posts-qrcode'),
-        'pqrc_display_height',
+        'pqrc_display_field',
         'reading',
-        'pqrc_section'
+        'pqrc_section',
+        array('pqrc_height')
     );
     add_settings_field(
         'pqrc_width',
         __('QR Code Width', 'posts-qrcode'),
-        'pqrc_display_width',
+        'pqrc_display_field',
         'reading',
-        'pqrc_section'
+        'pqrc_section',
+        array('pqrc_width')
+    );
+    add_settings_field(
+        'pqrc_extra',
+        __('Extra Field', 'posts-qrcode'),
+        'pqrc_display_field',
+        'reading',
+        'pqrc_section',
+        array('pqrc_extra')
     );
 
-    //Register plugin Height Width  Settings
+    //Register Custom Field for QR code plugin
     register_setting(
         'reading',
         'pqrc_height',
@@ -149,6 +159,12 @@ function pqrc_settings_init()
     register_setting(
         'reading',
         'pqrc_width',
+        array('sanitize_callback' => 'esc_attr')
+    );
+
+    register_setting(
+        'reading',
+        'pqrc_extra',
         array('sanitize_callback' => 'esc_attr')
     );
 }
@@ -158,27 +174,14 @@ function pqrc_section_callback(){
 	echo "<p>".__('Settings for Posts QR Code Plugin', 'posts-qrcode')."</p>";
 }
 
-
-//__Display Height Width Settings Fields__//
-function pqrc_display_height()
-{
-    $height = get_option('pqrc_height');
+//__Display Settings Fields__//
+function pqrc_display_field($args){
+    $options = get_option($args[0]);
     printf(
         "<input type='text' id='%s' name='%s' value='%s'/>",
-        'pqrc_height',
-        'pqrc_height',
-        $height
-    );
-}
-
-function pqrc_display_width()
-{
-    $width = get_option('pqrc_width');
-    printf(
-        "<input type='text' id='%s' name='%s' value='%s'/>",
-        'pqrc_width',
-        'pqrc_width',
-        $width
+        $args[0],
+        $args[0],
+        $options
     );
 }
 
