@@ -115,15 +115,16 @@ add_filter('the_content', 'pqrc_display_qr_code');
 //_Callback Function for Plugin Height Width Settings in wp_options Table
 function pqrc_settings_init()
 {
-	//hook for add plugin Settings Section
-	add_settings_section(
-		'pqrc_section',
-		__('Posts QR Code Section from Posts QR Code Plugin', 'posts-qrcode'),
-		'pqrc_section_callback',
-		'reading');
+    //hook for add plugin Settings Section
+    add_settings_section(
+        'pqrc_section',
+        __('Posts QR Code Section from Posts QR Code Plugin', 'posts-qrcode'),
+        'pqrc_section_callback',
+        'reading'
+    );
 
 
-	//hook for add plugin Settings Field Height Width
+    //hook for add plugin Settings Field Height Width
     add_settings_field(
         'pqrc_height',
         __('QR Code Height', 'posts-qrcode'),
@@ -140,14 +141,23 @@ function pqrc_settings_init()
         'pqrc_section',
         array('pqrc_width')
     );
+
     add_settings_field(
-        'pqrc_extra',
-        __('Extra Field', 'posts-qrcode'),
-        'pqrc_display_field',
+        'pqrc_select',
+        __('DropDown Select', 'posts-qrcode'),
+        'pqrc_display_select_field',
         'reading',
-        'pqrc_section',
-        array('pqrc_extra')
+        'pqrc_section'
     );
+    
+     // add_settings_field(
+    //     'pqrc_extra',
+    //     __('Extra Field', 'posts-qrcode'),
+    //     'pqrc_display_field',
+    //     'reading',
+    //     'pqrc_section',
+    //     array('pqrc_extra')
+    // );
 
     //Register Custom Field for QR code plugin
     register_setting(
@@ -164,18 +174,26 @@ function pqrc_settings_init()
 
     register_setting(
         'reading',
-        'pqrc_extra',
+        'pqrc_select',
         array('sanitize_callback' => 'esc_attr')
     );
+
+    // register_setting(
+    //     'reading',
+    //     'pqrc_extra',
+    //     array('sanitize_callback' => 'esc_attr')
+    // );
 }
 
 //__Callback funcition for Display Settings Section
-function pqrc_section_callback(){
-	echo "<p>".__('Settings for Posts QR Code Plugin', 'posts-qrcode')."</p>";
+function pqrc_section_callback()
+{
+    echo "<p>" . __('Settings for Posts QR Code Plugin', 'posts-qrcode') . "</p>";
 }
 
 //__Display Settings Fields__//
-function pqrc_display_field($args){
+function pqrc_display_field($args)
+{
     $options = get_option($args[0]);
     printf(
         "<input type='text' id='%s' name='%s' value='%s'/>",
@@ -183,6 +201,38 @@ function pqrc_display_field($args){
         $args[0],
         $options
     );
+}
+
+//__Display Dropdown field in Settings are__//
+function pqrc_display_select_field()
+{
+    $option = get_option('pqrc_select');
+    $Districts = array(
+        'None',
+        'Dhaka',
+        'Chittagong',
+        'Khulna',
+        'Dinajpur',
+        'Feni',
+        'Jessor',
+        'Rajsahi'
+    );
+    printf(
+        '<select id="%s" name="%s">',
+        'pqrc_select',
+        'pqrc_select'
+    );
+    foreach ($Districts as $District) {
+        $selected = '';
+        if ($option == $District) $selected = 'selected';
+        printf(
+            '<option value="%s" %s>%s</option>',
+            $District,
+            $selected,
+            $District
+        );
+    }
+    echo '</select>';
 }
 
 //Action hook for plugin settings
