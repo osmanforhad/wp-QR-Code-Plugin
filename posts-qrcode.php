@@ -17,6 +17,22 @@
  * Domain Path:       /languages/
  */
 
+$pqrc_Districts = array(
+    __('Dhaka','posts-qrcode'),
+    __('Chittagong','posts-qrcode'),
+    __('Khulna','posts-qrcode'),
+    __('Dinajpur','posts-qrcode'),
+    __('Feni','posts-qrcode'),
+    __('Jessor','posts-qrcode'),
+    __('Rajsahi','posts-qrcode'),
+);
+//__Callback function for Plugin initialization__//
+function pqrc_init(){
+    global $pqrc_Districts;
+    $pqrc_Districts = apply_filters('pqrc_Districts', $pqrc_Districts);
+}
+add_action("init", 'pqrc_init');
+
 //__CallBack function for Plugin Activation__//
 function posts_qrcode_activation_hook()
 {
@@ -205,23 +221,14 @@ function pqrc_display_field($args)
 //__Callback function for Display Dropdown field in Settings area__//
 function pqrc_display_select_field()
 {
+    global $pqrc_Districts;
     $option = get_option('pqrc_select');
-    $Districts = array(
-        'None',
-        'Dhaka',
-        'Chittagong',
-        'Khulna',
-        'Dinajpur',
-        'Feni',
-        'Jessor',
-        'Rajsahi'
-    );
     printf(
         '<select id="%s" name="%s">',
         'pqrc_select',
         'pqrc_select'
     );
-    foreach ($Districts as $District) {
+    foreach ($pqrc_Districts as $District) {
         $selected = '';
         if ($option == $District) {
             $selected = 'selected';
@@ -239,18 +246,9 @@ function pqrc_display_select_field()
 //___Callback function for Display Checkbox Field__//
 function pqrc_display_checkbox_field()
 {
+    global $pqrc_Districts;
     $option = get_option('pqrc_checkbox');
-    $Districts = array(
-        'Dhaka',
-        'Chittagong',
-        'Khulna',
-        'Dinajpur',
-        'Feni',
-        'Jessor',
-        'Rajsahi'
-    );
-
-    foreach ($Districts as $District) {
+    foreach ($pqrc_Districts as $District) {
         $selected = '';
         if (is_array($option) && in_array($District, $option)) {
             $selected = 'checked';
